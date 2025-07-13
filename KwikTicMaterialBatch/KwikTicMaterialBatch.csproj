@@ -18,7 +18,6 @@
     <Folder Include="Services\Extensions\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="wwwroot\lib\images\" />
     <Folder Include="wwwroot\lib\js\" />
   </ItemGroup>
 
