@@ -33,7 +33,7 @@ namespace KwikTicMaterialBatch.Data.Models
         /// <summary>
         /// Has this Material been used up / Empty?
         /// </summary>
-        public Nullable<bool> AllUsed { get; set; }
+        public bool AllUsed { get; set; } = false;
 
 
         /// <summary>

@@ -68,7 +68,7 @@ namespace KwikTicMaterialBatch.Repository
             {
                 // TODO FINISH THIS
                 //objectFromDb.MaterialSerialNumber = material.MaterialSerialNumber;
-
+                objectFromDb = material;
                 _db.Materials.Update(objectFromDb);
                 await _db.SaveChangesAsync();
 
