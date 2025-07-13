@@ -1,6 +1,7 @@
 ﻿using KwikTicMaterialBatch.Data;
 using KwikTicMaterialBatch.Data.Models;
 using KwikTicMaterialBatch.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwikTicMaterialBatch.Repository
 {
@@ -13,16 +14,16 @@ namespace KwikTicMaterialBatch.Repository
         {
             _db = db;
         }
-        public Material CreateMaterial(Material material)
+        public async Task<Material> CreateMaterial(Material material)
         {
-            _db.Materials.Add(material);
-            _db.SaveChanges();
+            _db.Materials.AddAsync(material);
+            await _db.SaveChangesAsync();
             return material;
         }
 
-        public bool DeleteMaterial(int id)
+        public async Task<bool> DeleteMaterial(int id)
         {
-            var obj = _db.Materials.FirstOrDefault(u => u.KitId == id);
+            var obj = await _db.Materials.FirstOrDefaultAsync(u => u.KitId == id);
 
             if(obj is null)
             {
@@ -31,19 +32,20 @@ namespace KwikTicMaterialBatch.Repository
             else
             {
                 _db.Remove(obj);
-                return _db.SaveChanges() > 0;
+                return await _db.SaveChangesAsync() > 0;
                 
             }
         }
 
-        public IEnumerable<Material> GetAllMaterials()
+        public async Task<IEnumerable<Material>> GetAllMaterials()
         {
-           return _db.Materials.ToList();
+           return await _db.Materials.ToListAsync();
         }
 
-        public Material GetMaterialById(int materialId)
+        public async Task<Material> GetMaterialById(int materialId)
         {
-            var obj = _db.Materials.FirstOrDefault(u => u.MaterialID == materialId);
+            var obj = await _db.Materials.FirstOrDefaultAsync(u => u.MaterialID == materialId);
+
             if(obj is null)
             {
                 return new Material(); // will return null
@@ -54,9 +56,9 @@ namespace KwikTicMaterialBatch.Repository
             }
         }
 
-        public Material UpdateMaterial(Material material)
+        public async Task<Material> UpdateMaterial(Material material)
         {
-            var objectFromDb = _db.Materials.FirstOrDefault(u => u == material);
+            var objectFromDb = await _db.Materials.FirstOrDefaultAsync(u => u == material);
 
             if(objectFromDb is null)
             {
@@ -68,7 +70,7 @@ namespace KwikTicMaterialBatch.Repository
                 //objectFromDb.MaterialSerialNumber = material.MaterialSerialNumber;
 
                 _db.Materials.Update(objectFromDb);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 return objectFromDb;
                 
