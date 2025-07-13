@@ -14,14 +14,14 @@ namespace KwikTicMaterialBatch.Repository
         {
             _db = db;
         }
-        public async Task<Material> CreateMaterial(Material material)
+        public async Task<Material> CreateMaterialAsync(Material material)
         {
             _db.Materials.AddAsync(material);
             await _db.SaveChangesAsync();
             return material;
         }
 
-        public async Task<bool> DeleteMaterial(int id)
+        public async Task<bool> DeleteMaterialAsync(int id)
         {
             var obj = await _db.Materials.FirstOrDefaultAsync(u => u.KitId == id);
 
@@ -37,12 +37,12 @@ namespace KwikTicMaterialBatch.Repository
             }
         }
 
-        public async Task<IEnumerable<Material>> GetAllMaterials()
+        public async Task<IEnumerable<Material>> GetAllMaterialsAsync()
         {
            return await _db.Materials.ToListAsync();
         }
 
-        public async Task<Material> GetMaterialById(int materialId)
+        public async Task<Material> GetMaterialByIdAsync(int materialId)
         {
             var obj = await _db.Materials.FirstOrDefaultAsync(u => u.MaterialID == materialId);
 
@@ -56,7 +56,7 @@ namespace KwikTicMaterialBatch.Repository
             }
         }
 
-        public async Task<Material> UpdateMaterial(Material material)
+        public async Task<Material> UpdateMaterialAsync(Material material)
         {
             var objectFromDb = await _db.Materials.FirstOrDefaultAsync(u => u == material);
 
