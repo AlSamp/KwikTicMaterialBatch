@@ -100,11 +100,11 @@ else
             var result = await _kitRepository.DeleteKitAsync(DeleteKitId);
             if (result == null)
             {
-                _JS?.ToastrSuccess("Kit Deleted Successfully");
+                _JS?.ToastrError("Error Encountered while deleting");
             }
             else
             {
-                _JS?.ToastrError("Error Encountered while deleting");
+                _JS?.ToastrSuccess("Kit Deleted Successfully");
                 await LoadKits();
             }
         }
