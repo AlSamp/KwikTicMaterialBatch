@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using KwikTicMaterialBatch.Data
+@using KwikTicMaterialBatch.Utilities
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -42,6 +43,24 @@
                         <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                         <label for="Input.ConfirmPassword">Confirm Password</label>
                         <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect type="password" @bind-Value="Input.Role" class="form-select">
+                            <option value="@SD.Role_Customer" selected> @SD.Role_Customer</option>
+                            <option value="@SD.Role_Admin"> @SD.Role_Admin</option>
+                        </InputSelect>
+                        <label for="role">Select Role</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect type="password" @bind-Value="Input.TenantId" class="form-select">
+                            @foreach (var tenant in @TenantId.TenantIdMap)
+                            {
+                                <option value="@tenant.Value">@tenant.Key - @tenant.Value</option>
+
+                            }
+
+                        </InputSelect>
+                        <label for="role">Select Tenant Id (TESTING ONLY)</label>
                     </div>
                     <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
                 </EditForm>
@@ -146,5 +165,8 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+
+        public string Role { get; set; } = SD.Role_Customer; // Default to Customer Role
+        public string TenantId { get; set; } = string.Empty; // Default Tenant ID
     }
 }
