@@ -1,0 +1,107 @@
+﻿@page "/kit/create"
+@page "/kit/update/{id:int}"
+@inject IKitRepository _kitRepository
+@inject NavigationManager _navigationManager
+@inject IJSRuntime _JS
+
+<h3>CatergoryUpsert</h3>
+
+@if (IsProcessing)
+{
+    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/lib/images/loading.gif" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py2">@(Id == 0 ? "Create" : "Update") Kit</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <EditForm Model="Kit" FormName="CategoryUpsertForm" OnValidSubmit="UpsertKit">
+                <DataAnnotationsValidator />
+                <div class="border p-3 mt-4">
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Kit.KitName" class="form-control" id="Name" placeholder="Name" />
+                        <label for="Name">Name</label>
+                        <ValidationMessage For="@(() => Kit.KitName)" class="text-danger" />
+                    </div>
+
+                   
+                   
+                    <div class="row mt-3">
+                        <div class="col-6 col-md-3">
+                            <button type="submit" class="btn btn-primary form-control" disabled="@IsProcessing">
+                                <i class="bi bi-floppy2-fill"> @(Id > 0 ? " Update" : " Create")</i>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="category" class="btn btn-secondary form-control" disabled="@IsProcessing">
+                                <i class="bi bi-arrow-bar-left"> Back To List</i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </EditForm>
+
+
+
+
+        </div>
+    </div>
+}
+
+@code {
+
+    private bool IsProcessing { get; set; } = true;
+
+
+    [SupplyParameterFromForm]
+    private Kit Kit { get; set; } = new Kit();
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // This method is called after the component has rendered to make sure that the data is loaded only once.
+        if (firstRender)
+        {
+            await LoadKit();
+            IsProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadKit()
+    {
+        if (Id > 0)
+        {
+            Kit = await _kitRepository.GetKitByIdAsync(Id);
+        }
+    }
+
+    private async Task UpsertKit()
+    {
+        IsProcessing = true;
+        if (Kit.KitId == 0) // Create a new category
+        {
+            await _kitRepository.CreateKitAsync(Kit);
+            await _JS.ToastrSuccess("Kit Successfully Created");
+        }
+        else // update category
+        {
+            await _kitRepository.UpdateKitAsync(Kit);
+            await _JS.ToastrSuccess("Kit Successfully Updated");
+        }
+        IsProcessing = false;
+        _navigationManager.NavigateTo("KitList");
+    }
+}

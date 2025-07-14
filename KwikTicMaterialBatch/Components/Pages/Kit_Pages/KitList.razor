@@ -1,12 +1,12 @@
-﻿@page "/MaterialList"
-@inject IMaterialRepository _materialRepository
+﻿@page "/KitList"
+@inject IKitRepository _kitRepository
 @inject IJSRuntime _JS
 
 <BsModal 
     OnModalConfirmation="ConfirmDelete_Click"
     ButtonBootstrapStyle="btn-danger"
     ButtonText="Delete"
-    Title="Are you sure you wish to DELETE this material?">
+    Title="Are you sure you wish to DELETE this kit?">
 </BsModal> 
 
 @if (IsProcessing)
@@ -21,20 +21,20 @@ else
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="text-white py2"> Material List</h2>
+                    <h2 class="text-white py2"> Kit List</h2>
                 </div>
             </div>
         </div>
         <div class="card-body p-4">
             <div class="row pb-3">
                 <div class="col-12 text-end">
-                    <a href="material/create" class="btn btn-lg btn-secondary" style="width:250px">
+                    <a href="kit/create" class="btn btn-lg btn-secondary" style="width:250px">
                         <i class="bi bi-plus-square"></i>
-                        Add New Material
+                        Add New Kit
                     </a>
                 </div>
             </div>
-            @if (Materials.Any())
+            @if (Kits.Any())
             {
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -44,18 +44,18 @@ else
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var obj in Materials)
+                        @foreach (var obj in Kits)
                         {
                             <tr>
                                 <td>
-                                    @obj.MaterialName
+                                    @obj.KitName
                                 </td>
                                 <td>
-                                    <a href="@($"material/update/{obj.MaterialID}")" class="btn btn-primary">
+                                    <a href="@($"kit/update/{obj.KitId}")" class="btn btn-primary">
                                         <i class="bi bi-pencil-square"></i>
                                         Edit</a>
                                     <button class="btn btn-danger"
-                                            @onclick="() => HandleDelete(obj.MaterialID)">
+                                            @onclick="() => HandleDelete(obj.KitId)">
                                         <i class="bi bi-trash3"></i>
                                         Delete</button>
                                 </td>
@@ -71,23 +71,23 @@ else
 
 @code {
     public bool IsProcessing { get; set; } = false;
-    private int DeleteMaterialId { get; set; } = 0;
-    private IEnumerable<Material> Materials { get; set; } = new List<Material>();
+    private int DeleteKitId { get; set; } = 0;
+    private IEnumerable<Kit> Kits { get; set; } = new List<Kit>();
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadMaterials();
+        await LoadKits();
     }
 
-    private async Task LoadMaterials()
+    private async Task LoadKits()
     {
-        Materials = await _materialRepository.GetAllMaterialsAsync();
+        Kits = await _kitRepository.GetAllKitsAsync();
     }
 
 
     private void HandleDelete(int id)
     {
-        DeleteMaterialId = id;
+        DeleteKitId = id;
         _JS.InvokeVoidAsync("ShowConfirmationModal");
     }
 
@@ -95,22 +95,22 @@ else
     {
         IsProcessing = true;
         await _JS.InvokeVoidAsync("HideConfirmationModal");
-        if (isConfirmed && DeleteMaterialId != 0)
+        if (isConfirmed && DeleteKitId != 0)
         {
-            var result = await _materialRepository.DeleteMaterialAsync(DeleteMaterialId);
+            var result = await _kitRepository.DeleteKitAsync(DeleteKitId);
             if (result == null)
             {
-                _JS?.ToastrSuccess("Material Deleted Successfully");
+                _JS?.ToastrSuccess("Kit Deleted Successfully");
             }
             else
             {
                 _JS?.ToastrError("Error Encountered while deleting");
-                await LoadMaterials();
+                await LoadKits();
             }
         }
         else
         {
-            DeleteMaterialId = 0;
+            DeleteKitId = 0;
         }
         IsProcessing = false;
     }
