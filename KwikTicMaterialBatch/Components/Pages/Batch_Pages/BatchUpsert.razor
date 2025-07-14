@@ -1,6 +1,6 @@
-﻿@page "/Kit/Create"
-@page "/Kit/Update/{id:int}"
-@inject IKitRepository _kitRepository
+﻿@page "/Batch/Create"
+@page "/Batch/Update/{id:int}"
+@inject IBatchRepository _batchRepository
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _JS
 
@@ -18,22 +18,23 @@ else
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="text-white py2">@(Id == 0 ? "Create" : "Update") Kit</h2>
+                    <h2 class="text-white py2">@(Id == 0 ? "Create" : "Update") Batch</h2>
                 </div>
             </div>
         </div>
         <div class="card-body p-4">
-            <EditForm Model="Kit" FormName="CategoryUpsertForm" OnValidSubmit="UpsertKit">
+            <EditForm Model="Batch" FormName="CategoryUpsertForm" OnValidSubmit="UpsertBatch">
                 <DataAnnotationsValidator />
                 <div class="border p-3 mt-4">
                     <div class="form-floating py-3 col-12">
-                        <InputText @bind-Value="Kit.KitName" class="form-control" id="Name" placeholder="Name" />
+                        <InputText @bind-Value="Batch.BatchName" class="form-control" id="Name" placeholder="Name" />
                         <label for="Name">Name</label>
-                        <ValidationMessage For="@(() => Kit.KitName)" class="text-danger" />
+                        <ValidationMessage For="@(() => Batch.BatchName)" class="text-danger" />
                     </div>
 
-                   
-                   
+
+
+
                     <div class="row mt-3">
                         <div class="col-6 col-md-3">
                             <button type="submit" class="btn btn-primary form-control" disabled="@IsProcessing">
@@ -64,7 +65,7 @@ else
 
 
     [SupplyParameterFromForm]
-    private Kit Kit { get; set; } = new Kit();
+    private Batch Batch { get; set; } = new Batch();
 
     [Parameter]
     public int Id { get; set; }
@@ -74,34 +75,34 @@ else
         // This method is called after the component has rendered to make sure that the data is loaded only once.
         if (firstRender)
         {
-            await LoadKit();
+            await LoadBatch();
             IsProcessing = false;
             StateHasChanged();
         }
     }
 
-    private async Task LoadKit()
+    private async Task LoadBatch()
     {
         if (Id > 0)
         {
-            Kit = await _kitRepository.GetKitByIdAsync(Id);
+            Batch = await _batchRepository.GetBatchByIdAsync(Id);
         }
     }
 
-    private async Task UpsertKit()
+    private async Task UpsertBatch()
     {
         IsProcessing = true;
-        if (Kit.KitId == 0) // Create a new category
+        if (Batch.BatchID == 0) // Create a new category
         {
-            await _kitRepository.CreateKitAsync(Kit);
-            await _JS.ToastrSuccess("Kit Successfully Created");
+            await _batchRepository.CreateBatchAsync(Batch);
+            await _JS.ToastrSuccess("Batch Successfully Created");
         }
         else // update category
         {
-            await _kitRepository.UpdateKitAsync(Kit);
-            await _JS.ToastrSuccess("Kit Successfully Updated");
+            await _batchRepository.UpdateBatchAsync(Batch);
+            await _JS.ToastrSuccess("Batch Successfully Updated");
         }
         IsProcessing = false;
-        _navigationManager.NavigateTo("KitList");
+        _navigationManager.NavigateTo("BatchList");
     }
 }

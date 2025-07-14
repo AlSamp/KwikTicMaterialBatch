@@ -8,7 +8,7 @@ namespace KwikTicMaterialBatch.Data
     {
         public DbSet<Material> Materials { get; set; } = null!; // Ensure that the DbSet seed is initialized
         public DbSet<Kit> Kits { get; set; }
-        //public DbSet<Batch> Batches { get; set}
+        public DbSet<Batch> Batches { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

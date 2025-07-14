@@ -4,10 +4,10 @@ namespace KwikTicMaterialBatch.Repository.IRepository
 {
     public interface IBatchRepository
     {
-        public Batch CreateBatch(Batch batch); // Create a new Batch
-        public Batch UpdateBatch(Batch batch); // Update a specific Batch
-        public bool DeleteBatch(int id); // Delete a specific Batch by its ID
-        public Batch GetBatchById(int batchId); // Get a specific Batch by its ID
-        public IEnumerable<Batch> GetAllBatches(); // Get All Batches
+        public Task<Batch> CreateBatchAsync(Batch batch); // Create a new Batch
+        public Task<Batch> UpdateBatchAsync(Batch batch); // Update a specific Batch
+        public Task<bool> DeleteBatchAsync(int id); // Delete a specific Batch by its ID
+        public Task<Batch> GetBatchByIdAsync(int batchId); // Get a specific Batch by its ID
+        public Task<IEnumerable<Batch>> GetAllBatchesAsync(); // Get All Batches
     }
 }

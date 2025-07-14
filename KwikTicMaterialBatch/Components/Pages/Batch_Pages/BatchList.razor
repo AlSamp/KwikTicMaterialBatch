@@ -1,12 +1,12 @@
-﻿@page "/MaterialList"
-@inject IMaterialRepository _materialRepository
+﻿@page "/BatchList"
+@inject IBatchRepository _batchRepository
 @inject IJSRuntime _JS
 
 <BsModal 
     OnModalConfirmation="ConfirmDelete_Click"
     ButtonBootstrapStyle="btn-danger"
     ButtonText="Delete"
-    Title="Are you sure you wish to DELETE this material?">
+    Title="Are you sure you wish to DELETE this batch?">
 </BsModal> 
 
 @if (IsProcessing)
@@ -21,20 +21,20 @@ else
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="text-white py2"> Material List</h2>
+                    <h2 class="text-white py2"> Batch List</h2>
                 </div>
             </div>
         </div>
         <div class="card-body p-4">
             <div class="row pb-3">
                 <div class="col-12 text-end">
-                    <a href="material/create" class="btn btn-lg btn-secondary" style="width:250px">
+                    <a href="batch/create" class="btn btn-lg btn-secondary" style="width:250px">
                         <i class="bi bi-plus-square"></i>
-                        Add New Material
+                        Add New Batch
                     </a>
                 </div>
             </div>
-            @if (Materials.Any())
+            @if (Batches.Any())
             {
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -44,18 +44,18 @@ else
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var obj in Materials)
+                        @foreach (var obj in Batches)
                         {
                             <tr>
                                 <td>
-                                    @obj.MaterialName
+                                    @obj.BatchName
                                 </td>
                                 <td>
-                                    <a href="@($"material/update/{obj.MaterialID}")" class="btn btn-primary">
+                                    <a href="@($"batch/update/{obj.BatchID}")" class="btn btn-primary">
                                         <i class="bi bi-pencil-square"></i>
                                         Edit</a>
                                     <button class="btn btn-danger"
-                                            @onclick="() => HandleDelete(obj.MaterialID)">
+                                            @onclick="() => HandleDelete(obj.BatchID)">
                                         <i class="bi bi-trash3"></i>
                                         Delete</button>
                                 </td>
@@ -71,23 +71,23 @@ else
 
 @code {
     public bool IsProcessing { get; set; } = false;
-    private int DeleteMaterialId { get; set; } = 0;
-    private IEnumerable<Material> Materials { get; set; } = new List<Material>();
+    private int DeleteBatchId { get; set; } = 0;
+    private IEnumerable<Batch> Batches { get; set; } = new List<Batch>();
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadMaterials();
+        await LoadBatches();
     }
 
-    private async Task LoadMaterials()
+    private async Task LoadBatches()
     {
-        Materials = await _materialRepository.GetAllMaterialsAsync();
+        Batches = await _batchRepository.GetAllBatchesAsync();
     }
 
 
     private void HandleDelete(int id)
     {
-        DeleteMaterialId = id;
+        DeleteBatchId = id;
         _JS.InvokeVoidAsync("ShowConfirmationModal");
     }
 
@@ -95,22 +95,22 @@ else
     {
         IsProcessing = true;
         await _JS.InvokeVoidAsync("HideConfirmationModal");
-        if (isConfirmed && DeleteMaterialId != 0)
+        if (isConfirmed && DeleteBatchId != 0)
         {
-            var result = await _materialRepository.DeleteMaterialAsync(DeleteMaterialId);
+            var result = await _batchRepository.DeleteBatchAsync(DeleteBatchId);
             if (result == null)
             {
-                _JS?.ToastrSuccess("Material Deleted Successfully");
+                _JS?.ToastrSuccess("Batch Deleted Successfully");
             }
             else
             {
                 _JS?.ToastrError("Error Encountered while deleting");
-                await LoadMaterials();
+                await LoadBatches();
             }
         }
         else
         {
-            DeleteMaterialId = 0;
+            DeleteBatchId = 0;
         }
         IsProcessing = false;
     }
