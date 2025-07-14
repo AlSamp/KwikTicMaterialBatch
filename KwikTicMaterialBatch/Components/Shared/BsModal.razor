@@ -1,22 +1,22 @@
 ﻿<!-- Modal -->
 <div class="modal fade" id="bsConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">@Title</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                @onclick="()=>ConfirmationClicked(false)">Close</button>
-                <button type="button" class="btn btn-primary"
-                        @onclick="() => ConfirmationClicked(true)">
-                    Delete
+            <div class="modal-body mo d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal"
+                        @onclick="() => ConfirmationClicked(false)" style="width:150px;">
+                    Close
+                </button>
+                <button type="button" class="btn btn-lg @ButtonBootstrapStyle"
+                        @onclick="() => ConfirmationClicked(true)" style="width:150px;">
+                    @ButtonText
                 </button>
             </div>
+
         </div>
     </div>
 </div>
@@ -33,4 +33,11 @@
         }
 
     }
+
+    [Parameter]
+    public string Title { get; set; } = "Confirmation Required";
+    [Parameter]
+    public string ButtonBootstrapStyle { get; set; } = "btn btn-primary";
+    [Parameter]
+    public string ButtonText { get; set; } = "Confirm";
 }

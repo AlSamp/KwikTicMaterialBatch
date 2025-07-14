@@ -1,4 +1,6 @@
-﻿namespace KwikTicMaterialBatch.Data.Models
+﻿using KwikTicMaterialBatch.Data.Models.Abstract;
+
+namespace KwikTicMaterialBatch.Data.Models
 {
 
     /// <summary>

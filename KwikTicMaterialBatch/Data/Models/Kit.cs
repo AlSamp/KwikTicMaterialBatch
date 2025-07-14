@@ -1,9 +1,11 @@
-﻿namespace KwikTicMaterialBatch.Data.Models
+﻿using KwikTicMaterialBatch.Data.Models.Abstract;
+
+namespace KwikTicMaterialBatch.Data.Models
 {
     /// <summary>
     /// A container that holds a list of Material
     /// </summary>
-    public class Kit //: AuditableEntity
+    public class Kit : AuditableEntity
     {
         public int KitId { get; set; }
 
