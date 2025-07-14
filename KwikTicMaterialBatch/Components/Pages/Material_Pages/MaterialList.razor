@@ -1,5 +1,8 @@
 ﻿@page "/MaterialList"
 @inject IMaterialRepository _materialRepository
+@inject IJSRuntime _JS
+
+<KwikTicMaterialBatch.Components.Shared.BsModal OnModalConfirmation="ConfirmDelete_Click"></KwikTicMaterialBatch.Components.Shared.BsModal>
 
 @if (IsProcessing)
 {
@@ -46,7 +49,8 @@ else
                                     <a href="@($"material/update/{obj.MaterialID}")" class="btn btn-primary">
                                         <i class="bi bi-pencil-square"></i>
                                         Edit</a>
-                                    <button class="btn btn-danger">
+                                    <button class="btn btn-danger"
+                                            @onclick="() => HandleDelete(obj.MaterialID)">
                                         <i class="bi bi-trash3"></i>
                                         Delete</button>
                                 </td>
@@ -62,6 +66,7 @@ else
 
 @code {
     public bool IsProcessing { get; set; } = false;
+    private int DeleteMaterialId { get; set; } = 0;
     private IEnumerable<Material> Materials { get; set; } = new List<Material>();
 
     protected override async Task OnInitializedAsync()
@@ -72,5 +77,36 @@ else
     private async Task LoadMaterials()
     {
         Materials = await _materialRepository.GetAllMaterialsAsync();
+    }
+
+
+    private void HandleDelete(int id)
+    {
+        DeleteMaterialId = id;
+        _JS.InvokeVoidAsync("ShowConfirmationModal");
+    }
+
+    private async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        IsProcessing = true;
+        await _JS.InvokeVoidAsync("HideConfirmationModal");
+        if (isConfirmed && DeleteMaterialId != 0)
+        {
+            var result = await _materialRepository.DeleteMaterialAsync(DeleteMaterialId);
+            if (result == null)
+            {
+                _JS?.ToastrSuccess("Material Deleted Successfully");
+            }
+            else
+            {
+                _JS?.ToastrError("Error Encountered while deleting");
+                await LoadMaterials();
+            }
+        }
+        else
+        {
+            DeleteMaterialId = 0;
+        }
+        IsProcessing = false;
     }
 }

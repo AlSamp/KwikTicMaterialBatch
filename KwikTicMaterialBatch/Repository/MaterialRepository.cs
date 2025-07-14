@@ -23,7 +23,7 @@ namespace KwikTicMaterialBatch.Repository
 
         public async Task<bool> DeleteMaterialAsync(int id)
         {
-            var obj = await _db.Materials.FirstOrDefaultAsync(u => u.KitId == id);
+            var obj = await _db.Materials.FirstOrDefaultAsync(u => u.MaterialID == id);
 
             if(obj is null)
             {
@@ -31,7 +31,7 @@ namespace KwikTicMaterialBatch.Repository
             }
             else
             {
-                _db.Remove(obj);
+                _db.Materials.Remove(obj);
                 return await _db.SaveChangesAsync() > 0;
                 
             }
